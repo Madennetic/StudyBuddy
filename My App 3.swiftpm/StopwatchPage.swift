@@ -3,7 +3,8 @@ struct StopwatchPage: View {
     @State private var isStudying: Bool = false
     @State private var studyTime: TimeInterval = 0
     @State private var startTime: Date?
-    
+    @State private var courses: String = ""
+
     private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -14,7 +15,7 @@ struct StopwatchPage: View {
             
             Text("Total Study Time: \(formatTime(studyTime))")
                 .font(.title2)
-            
+                        
             Button(action: {
                 if isStudying {
                     // Stop studying
@@ -43,7 +44,17 @@ struct StopwatchPage: View {
                 studyTime = Date().timeIntervalSince(startTime)
             }
         }
+        
+        TextField("Course Code", text: $courses)
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            .padding(.horizontal)
+            .frame(width: 200)
+            .multilineTextAlignment(.center)
     }
+    
+
+    
+
     
     func formatTime(_ time: TimeInterval) -> String {
         let hours = Int(time) / 3600
