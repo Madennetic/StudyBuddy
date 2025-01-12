@@ -5,7 +5,7 @@ struct StopwatchPage: View {
     @State private var studyTime: TimeInterval = 0
     @State private var startTime: Date?
     @State private var selectedCourses: [String] = [] // Tracks selected courses
-    private let courseOptions = ["1B03", "1ZA3", "1JC3", "1DM3"] // Checklist options
+    public let courseOptions = ["1B03", "1ZA3", "1JC3", "1DM3"] // Checklist options
     @State private var sessionCourses: [String] = [] // Tracks courses added to the session
     
     private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -69,33 +69,40 @@ struct StopwatchPage: View {
                     .font(.headline)
                     .padding(.bottom, 5)
                 
-                // Grid layout for the checklist
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 10) {
-                    ForEach(courseOptions, id: \.self) { course in
-                        Button(action: {
-                            withAnimation {
-                                toggleCourseSelection(course: course)
-                            }
-                        }) {
-                            HStack {
-                                Image(systemName: selectedCourses.contains(course) ? "checkmark.square.fill" : "square")
-                                    .foregroundColor(selectedCourses.contains(course) ? .blue : .gray)
+                // Menu for course selection
+                Menu {
+                    ScrollView {
+                        ForEach(courseOptions, id: \.self) { course in
+                            Button(action: {
+                                withAnimation {
+                                    if selectedCourses.contains(course) {
+                                        selectedCourses.removeAll { $0 == course }
+                                    } else {
+                                        selectedCourses = [course] // Allow only one course to be selected
+                                    }
+                                }
+                            }) {
                                 Text(course)
-                                    .foregroundColor(.primary)
                             }
                         }
-                        .buttonStyle(PlainButtonStyle())
-                        .padding(.vertical, 5)
                     }
+                    .frame(maxHeight: 200) // Limit scrollable area for long lists
+                } label: {
+                    HStack {
+                        Text(selectedCourses.first ?? "Select a course") // Display first selected course or placeholder
+                            .foregroundColor(selectedCourses.isEmpty ? .gray : .primary)
+                        Spacer()
+                        Image(systemName: "chevron.down")
+                            .foregroundColor(.gray)
+                    }
+                    .padding()
+                    .background(Color(UIColor.systemGray6))
+                    .cornerRadius(8)
                 }
-                .padding()
-                .background(Color(UIColor.systemGray6))
-                .cornerRadius(10)
-                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 3)
             }
             .padding(.horizontal)
             
-            // Add to Session Button
+            // Change Session Button
             Button(action: {
                 sessionCourses = selectedCourses
                 selectedCourses = []
