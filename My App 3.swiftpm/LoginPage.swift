@@ -2,9 +2,10 @@ import SwiftUI
 import SwiftData
 
 struct LoginPage: View {
+    @Binding var isLoggedIn: Bool
     @State private var fullName: String = ""
     @State private var userName: String = ""
-    @State private var showStopwatchPage: Bool = false
+    @State private var showCoursesPage: Bool = false
     
     // Access the SwiftData context
     @Environment(\.modelContext) private var modelContext
@@ -47,13 +48,14 @@ struct LoginPage: View {
                 
                 // Navigation Button with Validation
                 NavigationLink(
-                    destination: StopwatchPage(),
-                    isActive: $showStopwatchPage
+                    destination: CoursesPage(),
+                    isActive: $showCoursesPage
                 ) {
                     Button(action: {
                         if !fullName.isEmpty && !userName.isEmpty {
                             saveUser() // Save user data
-                            showStopwatchPage = true
+                            showCoursesPage = true
+                            isLoggedIn = true
                         }
                     }) {
                         Text("Start Studying")
