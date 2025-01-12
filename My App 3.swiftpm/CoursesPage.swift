@@ -2,48 +2,77 @@ import SwiftUI
 import SwiftData
 
 struct CoursesPage: View {
-    @State private var courses: [String] = [] // List of all courses
+    @Environment(\.modelContext) private var modelContext
+    @Query private var users: [User] // Fetch the current user
+
     @State private var newCourse: String = "" // Input text
+    @State private var currentUser: User? = nil
 
     var body: some View {
         VStack {
-            // List of courses with delete functionality
-            List {
-                ForEach(courses, id: \.self) { course in
-                    Text(course)
-                }
-                .onDelete(perform: removeCourses)
-            }
-            
-            // TextField for adding new courses
-            HStack {
-                TextField("Enter course", text: $newCourse)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .onChange(of: newCourse) { newValue in
-                        enforceTextFieldRules(newValue)
+            if let user = currentUser {
+                Text("Courses for \(user.fullName)")
+                    .font(.headline)
+                    .padding()
+
+                // List of courses with delete functionality
+                List {
+                    ForEach(user.courses, id: \.self) { course in
+                        Text(course)
                     }
-                    .textInputAutocapitalization(.characters)
-                    .disableAutocorrection(true)
-                
-                // Add Button
-                Button("Add") {
-                    addCourse()
+                    .onDelete { offsets in
+                        removeCourses(from: user, at: offsets)
+                    }
                 }
-                .disabled(!isCourseValid())
+                
+                // TextField for adding new courses
+                HStack {
+                    TextField("Enter course", text: $newCourse)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .onChange(of: newCourse) { newValue in
+                            enforceTextFieldRules(newValue)
+                        }
+                        .textInputAutocapitalization(.characters)
+                        .disableAutocorrection(true)
+                    
+                    // Add Button
+                    Button("Add") {
+                        addCourse(to: user)
+                    }
+                    .disabled(!isCourseValid())
+                }
+                .padding()
+            } else {
+                Text("No user logged in.")
+                    .foregroundColor(.gray)
             }
-            .padding()
+        }
+        .onAppear {
+            currentUser = users.last
         }
     }
     
-    // Add course to the list
-    private func addCourse() {
-        courses.append(newCourse)
+    // Add course to the user's list
+    private func addCourse(to user: User) {
+        user.courses.append(newCourse)
         newCourse = "" // Clear the text field
+        saveChanges()
     }
     
-    // Remove courses
-    private func removeCourses(at offsets: IndexSet) {
-        courses.remove(atOffsets: offsets)
+    // Remove courses from the user's list
+    private func removeCourses(from user: User, at offsets: IndexSet) {
+        user.courses.remove(atOffsets: offsets)
+        saveChanges()
+    }
+    
+    // Save changes to the SwiftData model
+    private func saveChanges() {
+        do {
+            try modelContext.save()
+            print("Changes saved successfully.")
+        } catch {
+            print("Failed to save changes: \(error.localizedDescription)")
+        }
     }
     
     // Enforce text field rules
@@ -56,11 +85,5 @@ struct CoursesPage: View {
     // Validate input
     private func isCourseValid() -> Bool {
         newCourse.count == 4 && !newCourse.isEmpty
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }

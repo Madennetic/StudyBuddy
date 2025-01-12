@@ -1,66 +1,89 @@
 import SwiftUI
 import SwiftData
+import Charts
 
 struct ProfilePage: View {
-    @State private var courses: [String] = [] // List of all courses
-    @State private var newCourse: String = "" // Input text
+    @Environment(\.modelContext) private var modelContext
+    @Query private var users: [User] // Fetch the current user
+    @State private var currentUser: User? = nil
 
     var body: some View {
-        VStack {
-            // List of courses with delete functionality
-            List {
-                ForEach(courses, id: \.self) { course in
-                    Text(course)
-                }
-                .onDelete(perform: removeCourses)
-            }
-            
-            // TextField for adding new courses
-            HStack {
-                TextField("Enter course", text: $newCourse)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .onChange(of: newCourse) { newValue in
-                        enforceTextFieldRules(newValue)
+        ScrollView {
+            VStack(spacing: 20) {
+                if let user = currentUser {
+                    Text("Profile of \(user.fullName)")
+                        .font(.largeTitle)
+                        .padding(.top)
+
+                    Text("Username: \(user.username)")
+                        .font(.headline)
+
+                    Divider()
+
+                    // Courses Section
+                    VStack(alignment: .leading) {
+                        Text("Courses:")
+                            .font(.headline)
+                        ForEach(user.courses, id: \.self) { course in
+                            Text("- \(course)")
+                        }
                     }
-                    .textInputAutocapitalization(.characters)
-                    .disableAutocorrection(true)
-                
-                // Add Button
-                Button("Add") {
-                    addCourse()
+                    .padding(.bottom, 10)
+
+                    Divider()
+
+                    // Study Sessions Section
+                    VStack(alignment: .leading) {
+                        Text("Study Sessions:")
+                            .font(.headline)
+                        ForEach(user.studySessions, id: \.self) { session in
+                            VStack(alignment: .leading) {
+                                Text("Course: \(session.courseName)")
+                                Text("Time Spent: \(formatTime(session.timeSpent))")
+                                Text("Date: \(formatDate(session.date))")
+                                    .foregroundColor(.gray)
+                            }
+                            .padding(.bottom, 10)
+                        }
+                    }
+                    .padding(.bottom, 10)
+
+                    Divider()
+
+                    // Bar Chart for Study Time
+                    Chart {
+                        ForEach(user.studySessions, id: \.self) { session in
+                            BarMark(
+                                x: .value("Course", session.courseName),
+                                y: .value("Time", session.timeSpent)
+                            )
+                            .foregroundStyle(Color.blue)
+                        }
+                    }
+                    .chartXAxisLabel("Courses")
+                    .chartYAxisLabel("Time Spent (s)")
+                    .frame(height: 250)
+                } else {
+                    Text("No user data available.")
                 }
-                .disabled(!isCourseValid())
             }
             .padding()
         }
-    }
-    
-    // Add course to the list
-    private func addCourse() {
-        courses.append(newCourse)
-        newCourse = "" // Clear the text field
-    }
-    
-    // Remove courses
-    private func removeCourses(at offsets: IndexSet) {
-        courses.remove(atOffsets: offsets)
-    }
-    
-    // Enforce text field rules
-    private func enforceTextFieldRules(_ value: String) {
-        if value.count > 4 {
-            newCourse = String(value.prefix(4))
+        .onAppear {
+            currentUser = users.last
         }
     }
-    
-    // Validate input
-    private func isCourseValid() -> Bool {
-        newCourse.count == 4 && !newCourse.isEmpty
+
+    private func formatTime(_ time: TimeInterval) -> String {
+        let hours = Int(time) / 3600
+        let minutes = (Int(time) % 3600) / 60
+        let seconds = Int(time) % 60
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: date)
     }
 }
-
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView()
-//    }
-//}

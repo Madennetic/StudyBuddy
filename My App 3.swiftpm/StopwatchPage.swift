@@ -1,15 +1,18 @@
 import SwiftUI
+import SwiftData
 
 struct StopwatchPage: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query private var users: [User] // Fetch the current user
+
     @State private var isStudying: Bool = false
     @State private var studyTime: TimeInterval = 0
     @State private var startTime: Date?
-    @State private var selectedCourses: [String] = [] // Tracks selected courses
-    public let courseOptions = ["1B03", "1ZA3", "1JC3", "1DM3"] // Checklist options
-    @State private var sessionCourses: [String] = [] // Tracks courses added to the session
-    
+    @State private var selectedCourse: String = ""
+
     private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
+    @State private var currentUser: User? = nil
+
     var body: some View {
         VStack(spacing: 30) {
             // Header
@@ -18,10 +21,6 @@ struct StopwatchPage: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.blue)
-                    .padding(.bottom, 5)
-                Text("Track your study sessions with ease.")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
             }
             .padding(.bottom, 20)
             
@@ -30,119 +29,45 @@ struct StopwatchPage: View {
                 Text("Total Study Time")
                     .font(.headline)
                 Text("\(formatTime(studyTime))")
-                    .font(.system(size: 60, weight: .bold, design: .monospaced)) // Monospaced timer
+                    .font(.system(size: 60, weight: .bold, design: .monospaced))
                     .foregroundColor(.primary)
-                    .padding(.vertical, 10)
             }
-            .padding(.horizontal)
+            .padding()
             .background(Color(UIColor.systemGray6))
             .cornerRadius(12)
-            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 3)
-            
+
+            // Course Picker
+            Picker("Select Course", selection: $selectedCourse) {
+                ForEach(currentUser?.courses ?? [], id: \.self) { course in
+                    Text(course)
+                }
+            }
+            .pickerStyle(MenuPickerStyle())
+            .padding()
+
             // Start/Stop Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    if isStudying {
-                        if let startTime = startTime {
-                            studyTime += Date().timeIntervalSince(startTime)
-                        }
-                        isStudying = false
-                    } else {
-                        startTime = Date()
-                        isStudying = true
+                if isStudying {
+                    if let startTime = startTime {
+                        studyTime += Date().timeIntervalSince(startTime)
+                        saveStudySession()
                     }
+                    isStudying = false
+                } else {
+                    startTime = Date()
+                    isStudying = true
                 }
             }) {
                 Text(isStudying ? "Stop Studying" : "Start Studying")
-                    .frame(maxWidth: .infinity)
                     .padding()
-                    .background(isStudying ? Color.red : Color.green)
+                    .background(isStudying ? Color.indigo : Color.cyan)
                     .foregroundColor(.white)
-                    .cornerRadius(12)
-                    .shadow(color: isStudying ? Color.red.opacity(0.4) : Color.green.opacity(0.4), radius: 8, x: 0, y: 4)
-            }
-            .padding(.horizontal)
-            
-            // Checklist Section
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Select Courses to Study")
-                    .font(.headline)
-                    .padding(.bottom, 5)
-                
-                // Menu for course selection
-                Menu {
-                    ScrollView {
-                        ForEach(courseOptions, id: \.self) { course in
-                            Button(action: {
-                                withAnimation {
-                                    if selectedCourses.contains(course) {
-                                        selectedCourses.removeAll { $0 == course }
-                                    } else {
-                                        selectedCourses = [course] // Allow only one course to be selected
-                                    }
-                                }
-                            }) {
-                                Text(course)
-                            }
-                        }
-                    }
-                    .frame(maxHeight: 200) // Limit scrollable area for long lists
-                } label: {
-                    HStack {
-                        Text(selectedCourses.first ?? "Select a course") // Display first selected course or placeholder
-                            .foregroundColor(selectedCourses.isEmpty ? .gray : .primary)
-                        Spacer()
-                        Image(systemName: "chevron.down")
-                            .foregroundColor(.gray)
-                    }
-                    .padding()
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(8)
-                }
-            }
-            .padding(.horizontal)
-            
-            // Change Session Button
-            Button(action: {
-                sessionCourses = selectedCourses
-                selectedCourses = []
-            }) {
-                Text("Change Sessions")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-                    .shadow(color: Color.blue.opacity(0.4), radius: 8, x: 0, y: 4)
-            }
-            .padding(.horizontal)
-            
-            // Display Session Courses
-            if !sessionCourses.isEmpty {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Session Courses")
-                        .font(.headline)
-                    
-                    // Grid layout for session courses
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 10) {
-                        ForEach(sessionCourses, id: \.self) { course in
-                            Text(course)
-                                .font(.subheadline)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color(UIColor.systemGray6))
-                                .cornerRadius(8)
-                        }
-                    }
-                }
-                .padding()
-                .background(Color(UIColor.systemGray5))
-                .cornerRadius(12)
-                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-                .padding(.horizontal)
+                    .cornerRadius(10)
             }
         }
-        .padding()
+        .onAppear {
+            currentUser = users.first
+        }
         .onReceive(timer) { _ in
             if isStudying, let startTime = startTime {
                 studyTime = Date().timeIntervalSince(startTime)
@@ -150,15 +75,24 @@ struct StopwatchPage: View {
         }
     }
     
-    func toggleCourseSelection(course: String) {
-        if selectedCourses.contains(course) {
-            selectedCourses.removeAll { $0 == course }
-        } else {
-            selectedCourses.append(course)
+    private func saveStudySession() {
+        guard let user = currentUser, !selectedCourse.isEmpty else { return }
+
+        let newSession = StudySession(courseName: selectedCourse, timeSpent: studyTime, date: Date())
+        user.studySessions.append(newSession)
+        
+        do {
+            try modelContext.save()
+            print("Study session saved: \(selectedCourse), \(studyTime) seconds on \(Date())")
+        } catch {
+            print("Failed to save study session: \(error.localizedDescription)")
         }
+
+        studyTime = 0
+        selectedCourse = ""
     }
-    
-    func formatTime(_ time: TimeInterval) -> String {
+
+    private func formatTime(_ time: TimeInterval) -> String {
         let hours = Int(time) / 3600
         let minutes = (Int(time) % 3600) / 60
         let seconds = Int(time) % 60
