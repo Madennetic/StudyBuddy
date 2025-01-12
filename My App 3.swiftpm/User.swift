@@ -13,6 +13,7 @@ class User {
         self.username = username
         self.fullName = fullName
     }
+
 }
 
 @Model

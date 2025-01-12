@@ -63,6 +63,7 @@ struct ProfilePage: View {
                     .chartXAxisLabel("Courses")
                     .chartYAxisLabel("Time Spent (s)")
                     .frame(height: 250)
+                   
                 } else {
                     Text("No user data available.")
                 }

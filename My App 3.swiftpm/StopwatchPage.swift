@@ -65,6 +65,7 @@ struct StopwatchPage: View {
                             .foregroundColor(.gray)
                     }
                     .padding()
+                    .frame(maxWidth: 250)
                     .background(Color(UIColor.systemGray6))
                     .cornerRadius(8)
                 }
