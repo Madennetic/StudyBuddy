@@ -9,6 +9,7 @@ struct StopwatchPage: View {
     @State private var studyTime: TimeInterval = 0
     @State private var startTime: Date?
     @State private var selectedCourse: String = ""
+    @State private var isChecked: Bool = false
     
     private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var currentUser: User? = nil
@@ -70,6 +71,19 @@ struct StopwatchPage: View {
                     .cornerRadius(8)
                 }
             }
+            HStack {
+                Button(action: {
+                    isChecked.toggle()
+                    
+                }) {
+                    Image(systemName: isChecked ? "checkmark.square.fill" : "square")
+                        .foregroundColor(isChecked ? .blue : .gray)
+            }
+                .buttonStyle(PlainButtonStyle())
+                Text("Study with Buddy")
+                    .font(.headline)
+        }
+
             
             // Start/Stop Button
             Button(action: {
