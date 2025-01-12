@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 
-struct ProfilePage: View {
+struct CoursesPage: View {
     @State private var courses: [String] = [] // List of all courses
     @State private var newCourse: String = "" // Input text
 
@@ -59,8 +59,8 @@ struct ProfilePage: View {
     }
 }
 
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView()
-//    }
-//}
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
