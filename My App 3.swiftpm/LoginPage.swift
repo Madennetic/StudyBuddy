@@ -32,7 +32,7 @@ struct LoginPage: View {
                     isActive: $showStopwatchPage
                 ) {
                     Button(action: {
-                        if !fullName.isEmpty && !email.isEmpty && !universityProgram.isEmpty && !courses.isEmpty {
+                        if !fullName.isEmpty && !userName.isEmpty && !universityProgram.isEmpty && !courses.isEmpty {
                             showStopwatchPage = true
                         }
                     }) {
