@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 struct ProfilePage: View {
     @State private var courses: [String] = [] // List of all courses
