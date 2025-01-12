@@ -2,7 +2,6 @@ import SwiftUI
 struct LoginPage: View {
     @State private var fullName: String = ""
     @State private var userName: String = ""
-    @State private var universityProgram: String = ""
     @State private var courses: String = ""
     @State private var showStopwatchPage: Bool = false
     
@@ -21,7 +20,6 @@ struct LoginPage: View {
                 TextField("Username", text: $userName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal)
-                    .keyboardType(.emailAddress)
                 
                 TextField("Courses (comma-separated)", text: $courses)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -32,7 +30,7 @@ struct LoginPage: View {
                     isActive: $showStopwatchPage
                 ) {
                     Button(action: {
-                        if !fullName.isEmpty && !userName.isEmpty && !universityProgram.isEmpty && !courses.isEmpty {
+                        if !fullName.isEmpty && !userName.isEmpty && !courses.isEmpty {
                             showStopwatchPage = true
                         }
                     }) {
