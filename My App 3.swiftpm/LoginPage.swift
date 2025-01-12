@@ -40,7 +40,7 @@ struct LoginPage: View {
                             showStopwatchPage = true
                         }
                     }) {
-                        Text("Start Studying")
+                        Text("FART Studying")
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(Color.blue)
