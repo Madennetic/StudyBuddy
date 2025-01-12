@@ -84,15 +84,17 @@ struct StopwatchPage: View {
             
             // Start/Stop Button
             Button(action: {
-                if isStudying {
-                    if let startTime = startTime {
-                        studyTime += Date().timeIntervalSince(startTime)
-                        saveStudySession()
+                if !selectedCourse.isEmpty {
+                    if isStudying {
+                        if let startTime = startTime {
+                            studyTime += Date().timeIntervalSince(startTime)
+                            saveStudySession()
+                        }
+                        isStudying = false
+                    } else {
+                        startTime = Date()
+                        isStudying = true
                     }
-                    isStudying = false
-                } else {
-                    startTime = Date()
-                    isStudying = true
                 }
             }) {
                 Text(isStudying ? "Stop Studying" : "Start Studying")
