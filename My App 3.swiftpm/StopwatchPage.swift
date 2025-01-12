@@ -38,15 +38,6 @@ struct StopwatchPage: View {
             .padding()
             .background(Color(UIColor.systemGray6))
             .cornerRadius(12)
-
-            // Course Picker
-            Picker("Select Course", selection: $selectedCourse) {
-                ForEach(currentUser?.courses ?? [], id: \.self) { course in
-                    Text(course)
-                }
-            }
-            .pickerStyle(MenuPickerStyle())
-            .padding()
             
             VStack(alignment: .leading, spacing: 10) {
                 
