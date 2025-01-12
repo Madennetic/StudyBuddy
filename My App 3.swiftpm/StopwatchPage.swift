@@ -49,9 +49,6 @@ struct StopwatchPage: View {
             .padding()
             
             VStack(alignment: .leading, spacing: 10) {
-                Text("Select Courses to Study")
-                    .font(.headline)
-                    .padding(.bottom, 5)
                 
                 // Menu for course selection
                 Menu {
