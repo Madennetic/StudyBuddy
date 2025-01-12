@@ -100,7 +100,7 @@ struct StopwatchPage: View {
                 sessionCourses = selectedCourses
                 selectedCourses = []
             }) {
-                Text("Add to Session")
+                Text("Change Sessions")
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.blue)
