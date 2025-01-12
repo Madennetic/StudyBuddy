@@ -1,9 +1,13 @@
 import SwiftUI
+import SwiftData
 
 struct LoginPage: View {
     @State private var fullName: String = ""
     @State private var userName: String = ""
     @State private var showStopwatchPage: Bool = false
+    
+    // Access the SwiftData context
+    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         NavigationView {
@@ -48,6 +52,7 @@ struct LoginPage: View {
                 ) {
                     Button(action: {
                         if !fullName.isEmpty && !userName.isEmpty {
+                            saveUser() // Save user data
                             showStopwatchPage = true
                         }
                     }) {
@@ -75,6 +80,20 @@ struct LoginPage: View {
                 LinearGradient(gradient: Gradient(colors: [Color.white, Color.blue.opacity(0.1)]),
                                startPoint: .top, endPoint: .bottom)
             )
+        }
+    }
+    
+    // Save user data into SwiftData
+    private func saveUser() {
+        let newUser = User(username: userName, fullName: fullName)
+        modelContext.insert(newUser) // Add the user to the context
+        
+        // Force a save to commit changes
+        do {
+            try modelContext.save()
+            print("User saved successfully: \(fullName), \(userName)")
+        } catch {
+            print("Error saving user: \(error.localizedDescription)")
         }
     }
 }
