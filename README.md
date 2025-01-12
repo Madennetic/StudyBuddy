@@ -1,4 +1,4 @@
-Study Buddy - Deltahacks 2025 Project
+## Study Buddy - Deltahacks 2025 Project
 
 Welcome to **Study Buddy**, a productivity app designed to make studying more efficient and collaborative! 🎉 
 
