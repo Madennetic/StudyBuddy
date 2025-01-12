@@ -29,7 +29,7 @@ struct LoginPage: View {
                 VStack(spacing: 15) {
                     TextField("Full Name", text: $fullName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.horizontal)
+//                        .padding(.horizontal)
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(Color.blue.opacity(0.7), lineWidth: 1)
@@ -37,7 +37,7 @@ struct LoginPage: View {
                     
                     TextField("Username", text: $userName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.horizontal)
+//                        .padding(.horizontal)
                         .keyboardType(.emailAddress)
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
