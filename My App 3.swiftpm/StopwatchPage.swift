@@ -9,11 +9,14 @@ struct StopwatchPage: View {
     @State private var studyTime: TimeInterval = 0
     @State private var startTime: Date?
     @State private var selectedCourse: String = ""
-
+    
     private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var currentUser: User? = nil
 
+
     var body: some View {
+        let user = currentUser
+        let courses = user?.courses ?? []
         VStack(spacing: 30) {
             // Header
             VStack(spacing: 5) {
@@ -44,7 +47,41 @@ struct StopwatchPage: View {
             }
             .pickerStyle(MenuPickerStyle())
             .padding()
-
+            
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Select Courses to Study")
+                    .font(.headline)
+                    .padding(.bottom, 5)
+                
+                // Menu for course selection
+                Menu {
+                    ScrollView {
+                        ForEach(courses, id: \.self) { course in
+                            Button(action: {
+                                withAnimation {
+                                    selectedCourse = course // Allow only one course to be selected
+                                    
+                                }
+                            }) {
+                                Text(course)
+                            }
+                        }
+                    }
+                    .frame(maxHeight: 200) // Limit scrollable area for long lists
+                } label: {
+                    HStack {
+                        Text(selectedCourse.isEmpty ? "Select a course" : selectedCourse) // Display first selected course or placeholder
+                            .foregroundColor(selectedCourse.isEmpty ? .gray : .primary)
+                        Spacer()
+                        Image(systemName: "chevron.down")
+                            .foregroundColor(.gray)
+                    }
+                    .padding()
+                    .background(Color(UIColor.systemGray6))
+                    .cornerRadius(8)
+                }
+            }
+            
             // Start/Stop Button
             Button(action: {
                 if isStudying {
@@ -66,7 +103,7 @@ struct StopwatchPage: View {
             }
         }
         .onAppear {
-            currentUser = users.first
+            currentUser = users.last
         }
         .onReceive(timer) { _ in
             if isStudying, let startTime = startTime {

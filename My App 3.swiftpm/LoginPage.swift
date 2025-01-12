@@ -48,7 +48,7 @@ struct LoginPage: View {
                 
                 // Navigation Button with Validation
                 NavigationLink(
-                    destination: CoursesPage(),
+                    destination: StopwatchPage(),
                     isActive: $showCoursesPage
                 ) {
                     Button(action: {
