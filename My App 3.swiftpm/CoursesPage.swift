@@ -14,6 +14,10 @@ struct CoursesPage: View {
                 Text("Courses for \(user.fullName)")
                     .font(.headline)
                     .padding()
+                if user.courses.isEmpty {
+                    Text("Input courses at the bottom to start")
+                        .opacity(0.25)
+                }
 
                 // List of courses with delete functionality
                 List {

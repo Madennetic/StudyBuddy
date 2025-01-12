@@ -76,7 +76,6 @@ struct StopwatchPage: View {
                 if !selectedCourse.isEmpty {
                     if isStudying {
                         if let startTime = startTime {
-                            studyTime += Date().timeIntervalSince(startTime)
                             saveStudySession()
                         }
                         isStudying = false
