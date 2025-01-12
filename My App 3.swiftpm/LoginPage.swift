@@ -79,7 +79,7 @@ struct LoginPage: View {
             }
             .padding()
             .background(
-                LinearGradient(gradient: Gradient(colors: [Color.white, Color.blue.opacity(0.1)]),
+                LinearGradient(gradient: Gradient(colors: [Color.black, Color.blue.opacity(0.1)]),
                                startPoint: .top, endPoint: .bottom)
             )
         }
