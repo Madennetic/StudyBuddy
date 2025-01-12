@@ -5,8 +5,8 @@ import SwiftData
 struct MyApp: App {
     var body: some Scene {
         WindowGroup {
-//            LoginPage()
-            StopwatchPage()
+            LoginPage()
+//            StopwatchPage()
         }
     }
 }
