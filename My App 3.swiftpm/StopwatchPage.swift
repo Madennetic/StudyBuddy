@@ -65,6 +65,7 @@ struct StopwatchPage: View {
                             .foregroundColor(.gray)
                     }
                     .padding()
+                    .frame(maxWidth: 250)
                     .background(Color(UIColor.systemGray6))
                     .cornerRadius(8)
                 }
@@ -75,7 +76,7 @@ struct StopwatchPage: View {
                 if !selectedCourse.isEmpty {
                     if isStudying {
                         if let startTime = startTime {
-                            studyTime += Date().timeIntervalSince(startTime)
+//                            studyTime += Date().timeIntervalSince(startTime)
                             saveStudySession()
                         }
                         isStudying = false
