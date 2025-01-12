@@ -18,7 +18,7 @@ struct LoginPage: View {
                     Text("Welcome to")
                         .font(.title)
                         .foregroundColor(.gray)
-                    Text("Study Tracker")
+                    Text("Study Buddy")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.gray)
@@ -80,7 +80,7 @@ struct LoginPage: View {
             .padding()
             .background(
 
-                LinearGradient(gradient: Gradient(colors: [Color.black, Color.blue.opacity(0.4)]),
+                LinearGradient(gradient: Gradient(colors: [Color.white, Color.blue.opacity(0.4)]),
 
                
                                startPoint: .top, endPoint: .bottom)

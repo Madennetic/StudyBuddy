@@ -5,7 +5,7 @@ struct ExplorePage: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 20) {
-                    Text("Explore")
+                    Text("My Buddies")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.blue)
@@ -13,11 +13,11 @@ struct ExplorePage: View {
 
                     // Example Content
                     VStack(alignment: .leading, spacing: 15) {
-                        Text("Popular Courses")
+                        Text("Studying Buddies")
                             .font(.headline)
                             .padding(.bottom, 5)
 
-                        ForEach(["Course 1", "Course 2", "Course 3"], id: \.self) { course in
+                        ForEach(["Sepanta, 1JC3, Mills", "Maden, 1XC3, PG", "Julien, 1PO3, HSL", "Felix, 1BO3, Thode" , "Luca , 1AO6, MUSC"], id: \.self) { course in
                             Text("• \(course)")
                                 .font(.body)
                                 .padding(.vertical, 5)
@@ -27,14 +27,24 @@ struct ExplorePage: View {
                                 .cornerRadius(10)
                         }
                     }
+                    
+                    VStack(spacing: 20) {
+                        Text("Find Buddies")
+                            .font(.title)
+                            .fontWeight(.medium)
+                            .foregroundColor(.blue)
+                            .padding()
+                    }
+                    .frame(maxWidth: 200)
+                    .frame(maxHeight: 75)
                     .padding()
                     .background(Color(UIColor.systemGray5))
                     .cornerRadius(15)
-                    .shadow(color: .gray.opacity(0.3), radius: 8, x: 0, y: 4)
+                    .shadow(color: .gray.opacity(0.3), radius: 5, x: 0, y: 4)
                 }
                 .padding()
             }
-            .navigationTitle("Explore")
+            .navigationTitle("")
         }
     }
 }

@@ -25,7 +25,7 @@ struct ContentView: View {
                 
                 ExplorePage() // Add the new ExplorePage
                     .tabItem {
-                        Label("Explore", systemImage: "globe")
+                        Label("My Buddies", systemImage: "globe")
                     }
             }
         } else {
