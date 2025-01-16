@@ -4,6 +4,13 @@ Welcome to **Study Buddy**, a productivity app designed to make studying more ef
 
 This was our team’s first experience participating in a large-scale hackathon, and we’re thrilled to have joined **Deltahacks 2025**. Initially, we planned to stick to frameworks and programming languages we were familiar with. However, after attending the Swift workshop during the event, we were inspired by the simplicity and elegance of Swift to challenge ourselves and create an iOS app from scratch.
 
+## Achievements
+
+We are proud to share that Study Buddy won:
+
+- 🏆 **DeltaHacks x Swift Student Challenge Winner**
+- 🏆 **Best Community Building Hack**
+
 ## **About the Project**
 As students ourselves, we understand the challenges of balancing multiple courses and making study time effective. With that in mind, we set out to design an app that:
 - **Tracks and logs your study hours.**
