@@ -8,8 +8,8 @@ This was our team’s first experience participating in a large-scale hackathon,
 
 We are proud to share that Study Buddy won:
 
-🏆 **DeltaHacks x Swift Student Challenge**
-🏆 **Best Community Building Hack**
+- 🏆 **DeltaHacks x Swift Student Challenge**
+- 🏆 **Best Community Building Hack**
 
 ## **About the Project**
 As students ourselves, we understand the challenges of balancing multiple courses and making study time effective. With that in mind, we set out to design an app that:
